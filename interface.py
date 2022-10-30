@@ -12,7 +12,7 @@ import smtplib
 import traceback
 # from decouple import config
 
-
+#setup voice engine of py text to speech
 engine = pyttsx3.init()
 voices = engine.getProperty("voices")
 engine.setProperty("voice", voices[1].id)
@@ -21,16 +21,19 @@ engine.setProperty("rate", 180)
 bot_name = "jarvis"
 User_name = "Sahil"
 
+
+#setup software paths to later launch them automatically
 paths = {
     'notepad': "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Accessories\\Notepad",
     'opera': "C:\\Users\\Sahil Mukesh Jain\\AppData\\Local\\Programs\\Opera\\launcher.exe",
     'calculator': "C:\\Windows\\System32\\calc.exe",
     'R studio': "C:\\Program Files\\RStudio\\bin\\rstudio.exe"
-
 }
 
+#Make lists of responses, bot will pick a random response in respective types (positive, negative, gratitude)
 positive_response = ["Cool, I am on it sir!", " Okay sir, I'm working on it!", "Just a second sir!"]
-negative_response = ["I think its invalid Command ", "My inventor didn't taught me this!", "Sorry!, i dont know how to do this" ]
+negative_response = ["I think its invalid Command ", "My inventor didn't taught me this!",
+                     "Sorry!, i don't know how to do this" ]
 gratitude = ["I am happy to help!", "My pleasure sir!", "No problem!"]
 
 email_id = "sahilmjain03@gmail.com"
@@ -45,10 +48,11 @@ def speak(text):
     engine.say(text)
     engine.runAndWait()
 
+#unauthorized method used in main.py
 def unauthorized():
     speak("You are unauthorized")
 
-
+#bot will start listening to you
 def take_command():
     r = sr.Recognizer()
     with sr.Microphone() as source:
@@ -58,7 +62,9 @@ def take_command():
 
     try:
         print('Recognizing...')
-        query = r.recognize_google(audio, language='en-in')
+        query = r.recognize_google(audio, language='en-in')  #converts the command into english string
+
+        #exit command to stop the execution of software.
         if 'exit' in query or 'stop' in query:
             hour = datetime.datetime.now().hour
             if 21 <= hour < 6:
@@ -68,7 +74,7 @@ def take_command():
             exit()
 
 
-
+#if command not converted to english string, throw exception
     except Exception as e:
         traceback.print_exc()
         speak('Sorry, I could not understand. Could you please say that again?')
@@ -76,6 +82,9 @@ def take_command():
     return query
 
 
+#like "ok google" is the key word to start executing google assistant, below text subparts are keywords to call
+# respective methods
+#function is used to take only commands, for general purpose inputs take_user_input() function is defined below.
 def validate_command(query):
     if "text file" in query:
         speak(choice(positive_response))
@@ -102,9 +111,11 @@ def validate_command(query):
         speak(choice(positive_response))
         search_on_wikipedia()
     elif "thank you" in query:
-        speak(choice(gratitude))
+        speak(choice(gratitude)) #choice function selects random element from the array
     elif "email" in query:
         send_email()
+
+    # if none of the above commands were present in the input, give a negative response to the user.
     else:
         speak(choice(negative_response))
 
@@ -114,7 +125,7 @@ def send_email():
         speak("Whom do you want to mail?, write correct mail id on console")
         receiver_address = input("Write mail id here: ")
         speak("What should be the subject?")
-        subject = take_user_input()
+        subject = take_user_input() #take_user_input method is defined below
         speak("What should i write?")
         message = take_user_input()
 
@@ -136,7 +147,7 @@ def send_email():
         print(e)
 
 
-
+#used to take general inputs required while execution.
 def take_user_input():
     r = sr.Recognizer()
     with sr.Microphone() as source:
@@ -161,6 +172,7 @@ def search_on_wikipedia():
 def open_cmd():
     os.system('start cmd')
 
+#paths to the below softwares are declared above
 def open_rstudio():
     os.startfile(paths['R studio'])
 
@@ -197,6 +209,8 @@ def greet():
     current_time = datetime.datetime.now().hour
 
     if 4 < current_time <= 12:
+        #the greeting phrase is jai jinendra of jainism religion, but since the bot wasn't pronouncing it correct i
+        # tried some permutations
         speak("gjai gjiinendraaa and Good morning " + User_name + "!")
     elif 12 < current_time <= 16:
         speak("gjai gjiinendraaa and Good afternoon " + User_name + "!")
@@ -209,8 +223,10 @@ def greet():
 
 
 if __name__ == "__main__":
-
+    #if user is authorized then this file starts executing, 1st greet, then start listening to commands
     greet()
+    #alike google assistant, it won't stop after taking one command but start listening again after finishing given task.
+    #for that  purposes , while true:
     while True:
         query = take_command()
         print("You said \" " + query + " \"")

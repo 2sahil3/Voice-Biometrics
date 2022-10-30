@@ -1,10 +1,13 @@
+#NOTE: The functions and code snippets written in the file are used when required by calling them manually, you can modify the code to
+# automate the program
+
 import sounddevice as sd
 import librosa
 import numpy as np
 from scipy.io.wavfile import write
+import pandas as pd
 
-
-#records your voice n times, where n is inout
+#records your voice n times, where n is input by user
 
 def record_audio():
     fs = 44100
@@ -30,7 +33,7 @@ def record_audio():
         if choice == 0:
             break
 
-
+#used in model.py
 def extract_mfcc(file, n_mfcc=40):
     audio, sr = librosa.load(file)
 
@@ -41,7 +44,7 @@ def extract_mfcc(file, n_mfcc=40):
 
 
 # Extract mfccs
-
+#
 # df = pd.DataFrame(columns=range(0,40))
 # print(df.columns)
 # for i in range(0, 21):
@@ -52,20 +55,20 @@ def extract_mfcc(file, n_mfcc=40):
 #     df.loc[len(df)] = lst
 #
 # print(df)
-# df.to_csv("data\sahil\\prakhar.csv")
+# df.to_csv("data\sahil\\prakhar.csv") #dont forget to change the paths (there are literally many paths in the project)
 
 
 
 # Append all individual data to complete data.
+#
 # df1 = pd.read_csv("data\sahil\\complete_data.csv")
 # print(df1.shape)
 # df2 = pd.read_csv("data\sahil\\prakhar.csv")
 # print(df2.shape)
-#
 # df1 = df1.append(df2, ignore_index=True)
 # print(len(df1))
 # df1.to_csv("data\sahil\complete_data.csv")
-#
+
 
 
 # record_audio()

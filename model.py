@@ -13,7 +13,7 @@ import time
 import warnings
 import pyttsx3
 
-
+#setup voice engine of py text to speech
 engine = pyttsx3.init()
 voices = engine.getProperty("voices")
 engine.setProperty("voice", voices[1].id)
@@ -38,9 +38,11 @@ def speaker_identifier():
     print("recording stopped")
 
     file = "data\\history\\last_try.wav"
+    #this will save the audio of the last person tried to access the software,
+    # will help later to identify the person
     write(filename=file, rate=fs, data=rec)
 
-    mfcc = extract_mfcc(file, n_mfcc=40)
+    mfcc = extract_mfcc(file, n_mfcc=40) #defined in creatingData.py
 
     input = pd.DataFrame(columns=range(0, 40))
 
@@ -54,10 +56,11 @@ def speaker_identifier():
 
 
 
-
-
+    # NOTE: Below are 5 models i researched upon out of which i found MLP neural netowrks best and also optimized them
+    # to their highest accuracy through many iterations.
 
     # MLPClassifier, working fair.
+    #Please optimize the classifier according to your requirements.
     classifier = MLPClassifier(solver='adam', alpha=0.001,
                                random_state=1, max_iter=500,
                                hidden_layer_sizes=100, activation="logistic")
@@ -69,14 +72,7 @@ def speaker_identifier():
     return pred_mlp[0]
 
 
-
-
-
-
-
-
-
-    # random forest,
+    # random forest, average
     # warnings.simplefilter("ignore")
     # clf_forest = RandomForestClassifier(max_depth=100, random_state=1
     #                                     , n_estimators=75, criterion="entropy",

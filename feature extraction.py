@@ -1,4 +1,4 @@
-import glob
+
 import soundfile
 import numpy as np
 import librosa
@@ -19,14 +19,14 @@ from librosa import display
 #
 # engine.stop()
 
-
-audio, sr = librosa.load("data\sahil1.wav")
-n_mfcc = 40
-
-mfccs = np.mean(librosa.feature.mfcc(y=audio, sr=sr, n_mfcc=n_mfcc).T, axis=0)
-
-print(mfccs.shape)
-print(mfccs)
+# At first i tried to calculate mfcc of just one file so tihs was the way, later i used this in below function
+# audio, sr = librosa.load("data\sahil1.wav")
+# n_mfcc = 40
+#
+# mfccs = np.mean(librosa.feature.mfcc(y=audio, sr=sr, n_mfcc=n_mfcc).T, axis=0)
+#
+# print(mfccs.shape)
+# print(mfccs)
 
 
 
@@ -37,9 +37,12 @@ def extract_feature(file_name, mfcc, chroma, mel):
     if chroma:
       stft=np.abs(librosa.stft(X))
     result=np.array([])
+
+    #these other functions too give the audoi data, but i was interested in mfcc(Mel-frequency cepstral coefficients)
     if mfcc:
       mfccs=np.mean(librosa.feature.mfcc(y=X, sr=sample_rate, n_mfcc=40).T, axis=0)
       result=np.hstack((result, mfccs))
+
     if chroma:
       chroma=np.mean(librosa.feature.chroma_stft(S=stft, sr=sample_rate).T,axis=0)
       result=np.hstack((result, chroma))
@@ -53,6 +56,9 @@ def load_data(test_size = 0.2):
   x, y = [], []
   return train_test_split(np.array(x), y, test_size = test_size, random_state = 9)
 
+
+#I tried to understand the noise signals in various audio files using plot functions, you can try too,
+# later i created different .py file for that.
 # fig, ax = plt.subplots()
 # img = display.specshow(data, x_axis='time', ax=ax)
 # fig.colorbar(img, ax=ax)
